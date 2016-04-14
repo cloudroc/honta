@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="jarcms:war">
+    <output-path>$PROJECT_DIR$/jarcms/target</output-path>
+    <root id="archive" name="honta.war">
+      <element id="artifact" artifact-name="jarcms:war exploded" />
+    </root>
+  </artifact>
+</component>

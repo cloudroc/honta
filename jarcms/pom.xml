@@ -1,0 +1,177 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>cn.jarjar</groupId>
+    <artifactId>jarcms</artifactId>
+    <packaging>war</packaging>
+    <version>1.0.1</version>
+    <name>jarcms Maven Webapp</name>
+    <url>http://maven.apache.org</url>
+    <dependencies>
+        <!-- 本地编译的jfinal -->
+        <dependency>
+            <groupId>cn.jarjar</groupId>
+            <artifactId>jfinal</artifactId>
+            <version>2.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.2.3</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.0.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.20</version>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.16</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.20</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jfinal</groupId>
+            <artifactId>cos</artifactId>
+            <version>26Dec2008</version>
+        </dependency>
+
+        <!-- Jetty JSP：根据 Dependency Hierarchy 视图拆分成了七个 dependency， - 方便项目以及便于
+              导出 war的在jetty与tomcat间无缝迁移 - Dependencies: http://mvnrepository.com/artifact/org.eclipse.jetty/jetty-jsp
+              <dependency> <groupId>org.eclipse.jetty</groupId> <artifactId>jetty-jsp</artifactId>
+              <version>8.1.8.v20121106</version> <scope>provided</scope> </dependency> -->
+        <dependency><!-- jetty-server-8.1.8 开发时JSP 支持 -->
+            <groupId>org.eclipse.jetty.orbit</groupId>
+            <artifactId>javax.servlet.jsp</artifactId>
+            <version>2.2.0.v201112011158</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency><!-- jetty-server-8.1.8 开发时JSP 支持 -->
+            <groupId>org.eclipse.jetty.orbit</groupId>
+            <artifactId>org.apache.jasper.glassfish</artifactId>
+            <version>2.2.2.v201112011158</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency><!-- jetty-server-8.1.8 开发时JSP 支持 -->
+            <groupId>org.eclipse.jetty.orbit</groupId>
+            <artifactId>javax.el</artifactId>
+            <version>2.2.0.v201108011116</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency><!-- jetty-server-8.1.8 开发时JSP 支持 -->
+            <groupId>org.eclipse.jetty.orbit</groupId>
+            <artifactId>com.sun.el</artifactId>
+            <version>2.2.0.v201108011116</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency><!-- jetty-server-8.1.8 开发时JSP 支持 -->
+            <groupId>org.eclipse.jetty.orbit</groupId>
+            <artifactId>org.eclipse.jdt.core</artifactId>
+            <version>3.7.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency><!-- JSTL 支持 -->
+            <groupId>org.eclipse.jetty.orbit</groupId>
+            <artifactId>javax.servlet.jsp.jstl</artifactId>
+            <version>1.2.0.v201105211821</version>
+            <exclusions><!-- 避免导出 servlet jar 包 -->
+                <exclusion>
+                    <groupId>org.eclipse.jetty.orbit</groupId>
+                    <artifactId>javax.servlet</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency><!-- JSTL 支持 -->
+            <groupId>org.eclipse.jetty.orbit</groupId>
+            <artifactId>org.apache.taglibs.standard.glassfish</artifactId>
+            <version>1.2.0.v201112081803</version>
+            <exclusions><!-- 避免导出 servlet jar 包 -->
+                <exclusion>
+                    <groupId>org.eclipse.jetty.orbit</groupId>
+                    <artifactId>javax.servlet</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        </dependencies>
+    <build>
+        <finalName>honta</finalName>
+        <plugins>
+
+            <!--
+            此plugin可以用
+            利用此plugin，把源代码中的xml文件，
+            打包到相应位置，这里主要是为了打包Mybatis的mapper.xml文件
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>add-resource</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/java</directory>
+                                    <includes>
+                                        <include>**/*.xml</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>8.1.8.v20121106</version>
+                <configuration>
+                    <stopKey>stop</stopKey>
+                    <stopPort>5599</stopPort>
+                    <webAppConfig>
+                        <contextPath>/</contextPath>
+                        <defaultsDescriptor>src/test/resources/webdefault.xml</defaultsDescriptor>
+                    </webAppConfig>
+                    <scanIntervalSeconds>5</scanIntervalSeconds>
+                    <connectors>
+                        <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                            <port>8991</port>
+                            <maxIdleTime>60000</maxIdleTime>
+                        </connector>
+                    </connectors>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>

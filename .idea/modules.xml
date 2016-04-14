@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/honta.iml" filepath="$PROJECT_DIR$/honta.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jarcms/jarcms.iml" filepath="$PROJECT_DIR$/jarcms/jarcms.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jarjar/jarjar.iml" filepath="$PROJECT_DIR$/jarjar/jarjar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jfinal/jfinal.iml" filepath="$PROJECT_DIR$/jfinal/jfinal.iml" />
+    </modules>
+  </component>
+</project>

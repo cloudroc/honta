@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jarjar.test.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="cn.jarjar.test.User" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="organization_id" property="organizationId" jdbcType="BIGINT" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="salt" property="salt" jdbcType="VARCHAR" />
+    <result column="role_ids" property="roleIds" jdbcType="VARCHAR" />
+    <result column="locked" property="locked" jdbcType="BIT" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, organization_id, username, password, salt, role_ids, locked
+  </sql>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectByUserName" resultMap="BaseResultMap" parameterType="String" >
+    select 
+    *
+    from sys_user
+    where username = #{value,jdbcType=VARCHAR}
+  </select>
+  
+
+  <insert id="insert" parameterType="cn.jarjar.test.User" >
+    insert into sys_user ( organization_id, username,
+      password, salt, role_ids, 
+      locked)
+    values ( #{organizationId,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR},
+      #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{roleIds,jdbcType=VARCHAR}, 
+      #{locked,jdbcType=BIT})
+  </insert>
+
+</mapper>
