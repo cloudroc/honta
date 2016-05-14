@@ -3,8 +3,6 @@ package cn.jarjar.core.mybatis;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import javax.sql.DataSource;
 import org.apache.ibatis.mapping.DatabaseIdProvider;

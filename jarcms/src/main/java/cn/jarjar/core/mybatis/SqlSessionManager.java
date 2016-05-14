@@ -23,7 +23,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.session.TransactionIsolationLevel;
 
 /**
- * Mybatis废弃类，用于构造现成安全的sqlsession
+ * Mybatis原有类，用于构造现成安全的sqlsession
  */
 public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
@@ -63,9 +63,9 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   private SqlSessionManager(SqlSessionFactory sqlSessionFactory) {
     this.sqlSessionFactory = sqlSessionFactory;
     this.sqlSessionProxy = (SqlSession) Proxy.newProxyInstance(
-        SqlSessionFactory.class.getClassLoader(),
-        new Class[]{SqlSession.class},
-        new SqlSessionInterceptor());
+            SqlSessionFactory.class.getClassLoader(),
+            new Class[]{SqlSession.class},
+            new SqlSessionInterceptor());
   }
 
   public void startManagedSession() {
@@ -74,7 +74,6 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   public void startManagedSession(boolean autoCommit) {
     this.localSqlSession.set(openSession(autoCommit));
-    System.out.println("startManagedSession sqlSession="+localSqlSession.get());
   }
 
   public void startManagedSession(Connection connection) {
@@ -233,7 +232,6 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   public void commit(boolean force) {
     final SqlSession sqlSession = localSqlSession.get();
-    System.out.println("commit sqlSession="+sqlSession);
     if (sqlSession == null) throw new SqlSessionException("Error:  Cannot commit.  No managed session is started.");
     sqlSession.commit(force);
   }
@@ -246,7 +244,6 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   public void rollback(boolean force) {
     final SqlSession sqlSession = localSqlSession.get();
-    System.out.println("rollback sqlSession="+sqlSession);
     if (sqlSession == null) throw new SqlSessionException("Error:  Cannot rollback.  No managed session is started.");
     sqlSession.rollback(force);
   }
@@ -259,9 +256,6 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   public void close() {
     final SqlSession sqlSession = localSqlSession.get();
-    
-    System.out.println("close sqlSession="+sqlSession);
-    
     if (sqlSession == null) throw new SqlSessionException("Error:  Cannot close.  No managed session is started.");
     try {
       sqlSession.close();
@@ -273,9 +267,6 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
   private class SqlSessionInterceptor implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
       final SqlSession sqlSession = SqlSessionManager.this.localSqlSession.get();
-      
-      System.out.println("SqlSessionInterceptor invoke begin ="+sqlSession);
-      
       if (sqlSession != null) {
         try {
           return method.invoke(sqlSession, args);
@@ -283,10 +274,8 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
           throw ExceptionUtil.unwrapThrowable(t);
         }
       } else {
-        final SqlSession autoSqlSession = openSession();
-        
-        System.out.println("SqlSessionInterceptor autoSqlSession open ="+autoSqlSession);
-        
+        //如果单独使用则默认关闭事务 20160514
+        final SqlSession autoSqlSession = openSession(true);
         try {
           final Object result = method.invoke(autoSqlSession, args);
           autoSqlSession.commit();
@@ -295,7 +284,6 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
           autoSqlSession.rollback();
           throw ExceptionUtil.unwrapThrowable(t);
         } finally {
-        	System.out.println("SqlSessionInterceptor autoSqlSession close ="+autoSqlSession);
           autoSqlSession.close();
         }
       }
